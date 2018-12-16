@@ -1,0 +1,34 @@
+{
+  "name": "micro-service-2",
+  "version": "0.0.0",
+  "description": "",
+  "author": "",
+  "license": "n",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha ./tests/*.spec.js",
+    "build": "docker build -t micro-service-2:0.0.0 .",
+    "watch": "nodemon -e js -x \"npm test & npm start\""
+  },
+  "dependencies": {
+    "cors": "~2.7.1",
+    "express": "^4.13.4",
+    "http-graceful-shutdown": "~1.0.4",
+    "jsonpatch": "^3.0.1",
+    "jsonwebtoken": "^8.4.0",
+    "request": "^2.88.0",
+    "swagger-parser": "^6.0.2",
+    "swagger-routes-express": "^2.0.0",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "mocha": "~2.3.3",
+    "should": "~7.1.1",
+    "nodemon": "~1.7.3"
+  }
+}

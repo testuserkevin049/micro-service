@@ -1,0 +1,102 @@
+swagger: "2.0"
+info:
+  description: Micro service with authentication
+  version: "1.0.1"
+  title: Micro service
+basePath: "/api/v1"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /user:
+    get:
+      summary: "Get user details"
+      operationId: "getUserDetails"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        404:
+          description: "not found"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+  /login:
+    post:
+      summary: "Login user"
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+  /create:
+    post:
+      summary: "create new user"
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+  /update:
+    put:
+      summary: "update user details"
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+
+  /delete:
+    delete:
+      summary: "delete registered user"
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+definitions:
+  ServerInfo:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+      version:
+        type: "string"
+      uptime:
+        type: "number"
