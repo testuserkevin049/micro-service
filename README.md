@@ -1,4 +1,4 @@
-# micro-service-2
+# micro-service
 
 
 
@@ -15,4 +15,4 @@ npm run watch      // runs a file watcher to restart and test on each file chang
 
 ## License
 
-n
+MIT

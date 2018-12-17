@@ -12,6 +12,8 @@ paths:
     get:
       summary: "Get user details"
       operationId: "getUserDetails"
+      security:
+      - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -42,7 +44,7 @@ paths:
           description: "server error"
           schema:
             $ref: "#/definitions/ServerInfo"
-  /create:
+  /register:
     post:
       summary: "create new user"
       operationId: "createUser"
@@ -53,6 +55,10 @@ paths:
           description: "success"
           schema:
             $ref: "#/definitions/ServerInfo"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/AuthorizationError"
         500:
           description: "server error"
           schema:
@@ -61,6 +67,8 @@ paths:
     put:
       summary: "update user details"
       operationId: "updateUser"
+      security:
+      - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -68,6 +76,10 @@ paths:
           description: "success"
           schema:
             $ref: "#/definitions/ServerInfo"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/AuthorizationError"
         500:
           description: "server error"
           schema:
@@ -77,6 +89,8 @@ paths:
     delete:
       summary: "delete registered user"
       operationId: "deleteUser"
+      security:
+      - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -84,10 +98,40 @@ paths:
           description: "success"
           schema:
             $ref: "#/definitions/ServerInfo"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/AuthorizationError"
         500:
           description: "server error"
           schema:
             $ref: "#/definitions/ServerInfo"
+  /json/patch:
+    put:
+      summary: "patching a json object"
+      operationId: "patchJson"
+      security:
+      - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/PatchedObject"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/AuthorizationError"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
+securityDefinitions:
+  Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
 definitions:
   ServerInfo:
     type: "object"
@@ -100,3 +144,12 @@ definitions:
         type: "string"
       uptime:
         type: "number"
+  PatchedObject:
+    type: "object"
+  AuthorizationError:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+security:
+- Bearer: []

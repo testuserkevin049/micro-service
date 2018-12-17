@@ -19,10 +19,10 @@ module.exports = async function () {
     const logger = winston.createLogger({
         levels: winston.config.syslog.levels,
         transports: [
-            new winston.transports.Console({ level: 'error' }),
+            new winston.transports.Console({ level: 'debug' }),
             new winston.transports.File({
                 filename: 'combined.log',
-                level: 'info'
+                level: 'debug'
             })
         ]
     });
@@ -34,12 +34,27 @@ module.exports = async function () {
     app.use(cors());
 
     // Add Authentication middleware
+    // TODO:* We need to replace this one with swagger security just to bind thing in a nice a way.
     app.use(function (req, res, next) {
         req.logger = logger;
         const token = req.get('authorization');
-        const validToken = authHelper.validToken(token);
-        if (validToken) {
-            next();
+        logger.debug(token);
+
+        logger.debug(req)
+
+        const authUrl = req.url.replace('/api/v1/', '').match(/delete|json|patch/).length > 0;
+
+        if (authUrl) {
+               
+            authHelper.validToken(token, function (error, decoded) {
+                logger.debug(decoded);
+                if (decoded) {
+                    next();
+                }
+                logger.debug('Not found or invalid token');
+                res.sendStatus(401).end();
+            });
+
         }
     });
 

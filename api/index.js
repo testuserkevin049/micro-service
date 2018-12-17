@@ -1,5 +1,5 @@
 const { getUserDetails, createUser, loginUser, updateUser, deleteUser } = require('./user');
-
+const { patchJson } = require('./jsonPatch');
 
 
 module.exports = {
@@ -7,5 +7,6 @@ module.exports = {
     createUser,
     getUserDetails,
     updateUser,
-    deleteUser
+    deleteUser,
+    patchJson
 };

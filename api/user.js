@@ -10,8 +10,9 @@ module.exports = {
    * @param {Object} res response
    */
   getUserDetails: function (req, res) {
-
-    res.send('Success');
+    const logger = req.logger;
+    logger.info('success getting user details');
+    res.send('Success').end();;
   },
 
 

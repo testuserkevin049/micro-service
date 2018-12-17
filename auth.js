@@ -7,6 +7,7 @@ const apiVersion = process.env.API_VERSION || 'v1';
 const baseUrl = `/api/${apiVersion}`;
 
 
+
 // Authentication middleware
 module.exports = (req, res, next) => {
   const logger = req.logger;
@@ -15,6 +16,9 @@ module.exports = (req, res, next) => {
     authHelper.validToken(token, function (error, decoded) {
       if (!error) {
         logger.info('Valid token found!');
+        // TODO:* Check if token is expired
+        const expired = helper.expiredToken(decoded);
+        
         next()        
       } else {
         logger.error('Invalid token!');
