@@ -146,6 +146,11 @@ definitions:
         type: "number"
   PatchedObject:
     type: "object"
+    properties:
+      name:
+        type: "string"
+      handle:
+        type: "string"
   AuthorizationError:
     type: "object"
     properties:

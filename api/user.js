@@ -9,25 +9,26 @@ module.exports = {
    * @param {Object} req request
    * @param {Object} res response
    */
-  getUserDetails: function (req, res) {
-    const logger = req.logger;
+  getUserDetails: (req, res) => {
+    const logger = req.logger; // eslint-disable-line
     logger.info('success getting user details');
-    res.send('Success').end();;
+    res.send('Success').end();
   },
-
 
   /**
    * Login user
    * @param {Object} req request
    * @param {Object} res response
    */
-  loginUser: function (req, res) {
+  loginUser: (req, res) => {
+    const username = req.body.username; // eslint-disable-line
+    const password = req.body.password; // eslint-disable-line
+    const token = jwt.sign({
+      username,
+      password,
+    }, 'secret');
 
-    const token =  req.get('authorization');
-    const username = req.body.username;
-    const password = req.body.password;
-
-    res.send('success').end()
+    res.send({ token }).end();
   },
 
 
@@ -36,26 +37,24 @@ module.exports = {
    * @param {Object} req request
    * @param {Object} res response
    */
-  createUser: function (req, res) {
-    console.log()
+  createUser: (req, res) => {
     const user = req.body;
     const token = jwt.sign({
-      user
+      user,
     });
-  
     res.json({
       firstname: user.firstname,
-      lastname: lastname,
+      lastname: user.lastname,
       username: user.username,
       email: user.email,
       credentails: {
         createdAt: Date.now.toString('dd:mm:yyyy'),
         expiresAt: '',
-        token
+        token,
       },
       createdAt: Date.now.toString('dd:mm:yyyy'),
       updatedAt: Date.now.toString('dd:mm:yyyy'),
-      updatedBy: username
+      updatedBy: user.username,
     });
     res.end();
   },
@@ -66,21 +65,18 @@ module.exports = {
    * @param {Object} req request
    * @param {Object} res response
    */
-  updateUser: function (req, res) {
-
+  updateUser: (req, res) => {
     res.send('Success');
   },
-  
 
   /**
    * Remove user
    * @param {Object} req request
    * @param {Object} res response
    */
-  deleteUser: function (req, res) {
-
+  deleteUser: (req, res) => {
     res.send('Success');
-  }
+  },
 
 
 };

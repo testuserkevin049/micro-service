@@ -13,22 +13,31 @@
     "start": "node index.js",
     "test": "mocha ./tests/*.spec.js",
     "build": "docker build -t micro-service-2:0.0.0 .",
-    "watch": "nodemon -e js -x \"npm test & npm start\""
+    "watch": "nodemon -e js -x \"npm test & npm start\"",
+    "lint": "eslint --ext .js,.jsx ."
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cors": "~2.7.1",
     "express": "^4.13.4",
     "http-graceful-shutdown": "~1.0.4",
+    "jimp": "^0.6.0",
     "jsonpatch": "^3.0.1",
     "jsonwebtoken": "^8.4.0",
     "request": "^2.88.0",
+    "resize-image": "^0.1.0",
     "swagger-parser": "^6.0.2",
     "swagger-routes-express": "^2.0.0",
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
     "mocha": "~2.3.3",
-    "should": "~7.1.1",
-    "nodemon": "~1.7.3"
+    "nodemon": "~1.7.3",
+    "should": "~7.1.1"
   }
 }
