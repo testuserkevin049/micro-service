@@ -1,27 +1,46 @@
-// const helper = require('./authHelper');
+const winston = require('winston');
+const authHelper = require('./authHelper');
 
-// // const apiVersion = process.env.API_VERSION || 'v1';
-// // const baseUrl = `/api/${apiVersion}`;
-// // TODO:* Move the auth implementation from the app.js file to here.
-// // Authentication middleware
-// module.exports = (req, res, next) => {
-//   const logger = req.logger;
-//   if (req.get('authorization') === 'LET THE RIGHT ONE IN') {
+// logger
+const logger = winston.createLogger({
+  levels: winston.config.syslog.levels,
+  transports: [
+    new winston.transports.Console({ level: 'debug' }),
+    new winston.transports.File({
+      filename: 'combined.log',
+      level: 'debug',
+    }),
+  ],
+});
 
-//     const token = req.get('authorization');
-//     authHelper.validToken(token, function (error, decoded) {
-//       if (!error) {
-//         logger.info('Valid token found!');
-//         // TODO:* Check if token is expired
-//         // const expired = helper.expiredToken(decoded);
+// Authentication middleware
+module.exports = (req, res, next) => {
+  req.logger = logger;
 
-//         next();
-//       } else {
-//         logger.error('Invalid token!');
-//         return res.status(401).end();
-//       }
-//     });
-//   }
-//   logger.error('Invalid token!');
-//   return res.status(401).end();
-// };
+  try {
+    const token = req.get('authorization');
+    const authUrl = req.url.replace('/api/v1/', '').match(/delete|json|patch|thumbnail/).length > 0;
+    if (authUrl) {
+      authHelper.validToken(token, (error, decoded) => { // eslint-disable-line
+        logger.debug(decoded);
+        if (decoded) {
+          next();
+        }
+        if (error) {
+          // logger.debug('Not found or invalid token');
+          res.sendStatus(401).end();
+        }
+      });
+    }
+  } catch (er) {
+    try {
+      const noAuthUrl = req.url.replace('/api/v1/', '').match(/login|user/).length > 0;
+      if (noAuthUrl) {
+        next();
+      }
+    } catch (err) {
+      logger.debug(err);
+      res.send(500).end();
+    }
+  }
+};

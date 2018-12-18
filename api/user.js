@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const fs = require('fs');
 
 module.exports = {
 
@@ -16,11 +16,31 @@ module.exports = {
   },
 
   /**
+   * Create a new unique directory to store downloaded files
+   * @param {String} username unique username
+   */
+  createUserDirectory: (username) => { // eslint-disable-line
+    return new Promise((resolve, reject) => { // eslint-disable-line
+      fs.mkdir(`../data/${username}`, (er) => {
+        if (!er) {
+          resolve();
+        }
+        // TODO:* Test this
+        // if (er === 'directory exist') {
+        //   resolve();
+        // }
+        reject();
+      });
+    });
+  },
+
+  /**
    * Login user
    * @param {Object} req request
    * @param {Object} res response
    */
   loginUser: (req, res) => {
+    const logger = req.logger; // eslint-disable-line
     const username = req.body.username; // eslint-disable-line
     const password = req.body.password; // eslint-disable-line
     const token = jwt.sign({
@@ -28,7 +48,13 @@ module.exports = {
       password,
     }, 'secret');
 
-    res.send({ token }).end();
+    this.createUserDirectory(username)
+      .then(() => res.send({ token }).end())
+      .catch((er) => {
+        logger.debug(er);
+        res.status(500);
+        res.send('Error: Could not create user directory. Have you registered the user.').end();
+      });
   },
 
 

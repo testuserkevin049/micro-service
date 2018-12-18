@@ -127,6 +127,25 @@ paths:
           description: "server error"
           schema:
             $ref: "#/definitions/ServerInfo"
+  /thumbnail:
+    post:
+      summary: "resize an image"
+      operationId: "resizeThumbnail"
+      security:
+      - Bearer: []
+      produces:
+      - "application/form-data"
+      responses:
+        200:
+          description: "success"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/AuthorizationError"
+        500:
+          description: "server error"
+          schema:
+            $ref: "#/definitions/ServerInfo"
 securityDefinitions:
   Bearer:
       type: apiKey

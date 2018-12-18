@@ -4,6 +4,9 @@ const {
 const {
   patchJson,
 } = require('./jsonPatch');
+const {
+  resize,
+} = require('./thumbnail');
 
 
 module.exports = {
@@ -13,4 +16,5 @@ module.exports = {
   updateUser,
   deleteUser,
   patchJson,
+  resizeImg: resize,
 };
