@@ -16,5 +16,5 @@ module.exports = {
   updateUser,
   deleteUser,
   patchJson,
-  resizeImg: resize,
+  resize,
 };

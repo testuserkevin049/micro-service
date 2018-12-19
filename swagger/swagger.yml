@@ -130,7 +130,7 @@ paths:
   /thumbnail:
     post:
       summary: "resize an image"
-      operationId: "resizeThumbnail"
+      operationId: "resize"
       security:
       - Bearer: []
       produces:

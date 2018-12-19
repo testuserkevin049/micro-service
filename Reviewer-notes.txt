@@ -1,0 +1,15 @@
+---
+desc: Stuff to look out for during review
+---
+
+
+
+1. 
+When a user logs in a new directory is created where thumbnails can be stored
+but this implementation is better suited for the registration process instead.
+
+
+2.
+For this simple service am assuming that every user has admin rights. As long
+as they are authenticated they are allowed to make requests.
+
