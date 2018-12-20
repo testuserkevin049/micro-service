@@ -48,13 +48,15 @@ module.exports = {
       password,
     }, 'secret');
 
-    this.createUserDirectory(username)
-      .then(() => res.send({ token }).end())
-      .catch((er) => {
-        logger.debug(er);
-        res.status(500);
-        res.send('Error: Could not create user directory. Have you registered the user.').end();
-      });
+    res.send({ token }).end();
+
+    // this.createUserDirectory(username)
+    //   .then(() => res.send({ token }).end())
+    //   .catch((er) => {
+    //   logger.debug(er);
+    //   res.status(500);
+    //   res.send('Error: Could not create user directory. Have you registered the user.').end();
+    // });
   },
 
 

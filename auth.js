@@ -18,8 +18,9 @@ module.exports = (req, res, next) => {
   req.logger = logger;
 
   try {
-    const token = req.get('authorization');
     const authUrl = req.url.replace('/api/v1/', '').match(/delete|json|patch|thumbnail/).length > 0;
+    let token = req.get('authorization');
+    token = token.replace('Bearer ', '');
     if (authUrl) {
       authHelper.validToken(token, (error, decoded) => { // eslint-disable-line
         logger.debug(decoded);
@@ -27,7 +28,7 @@ module.exports = (req, res, next) => {
           next();
         }
         if (error) {
-          // logger.debug('Not found or invalid token');
+          logger.debug('Not found or invalid token');
           res.sendStatus(401).end();
         }
       });

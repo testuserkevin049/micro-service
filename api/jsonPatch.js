@@ -11,8 +11,7 @@ module.exports = {
     const logger = req.logger; // eslint-disable-line
 
     try {
-      const json = req.body.json; // eslint-disable-line
-      const patch = req.body.patch; // eslint-disable-line
+      const { json, patch } = req.body;
       const patchedJson = jsonPatch.apply_patch(json, [patch]);
 
       res.json(patchedJson).end();

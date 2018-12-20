@@ -1,6 +1,6 @@
-// const fs = require('fs');
+const fs = require('fs');
 const Path = require('path');
-// const request = require('request');
+const axios = require('axios');
 const jimp = require('jimp');
 const authHelper = require('../authHelper');
 
@@ -29,53 +29,26 @@ function findUserDirectory(token) {
  * @param {String} path Thumbnail path
  */
 function stripThumbnailName(path) { // eslint-disable-line
-  let name = ''; // eslint-disable-line
-
+  const name = path.replace(/^(.*)\//, '');
   return name;
 }
-
-// /**
-//  * Get the thumbnail file
-//  * @param {String} name thumbnail file name
-//  * @param {String} path thumbnail file path
-//  * @returns {Object} the thumbnail blob
-//  */
-// function findThumbnail(path) {
-//   return new Promise(function (resolve, reject) {
-//     resolve();
-//   });
-//   // return new Promise(function (resolve, reject) {
-//   //   fs.readFile(`${path}/googlelogo-new.png`).then((er, buffer) => {
-//   //     if (er) {
-//   //       logger.debug(er);
-//   //       reject(new Error(er));
-//   //     }
-//   //     resolve(new Blob(buffer, { // eslint-disable-line
-//   //       type: 'application/octet-stream',
-//   //     }));
-//   //   });
-//   // });
-// }
 
 /**
  * Resize thumbnail
  * @param {String} path local image path
  */
 function resizeImg(path) {
-  // TODO:* Make use of this method.
-  const name = stripThumbnailName(path); // eslint-disable-line
   return new Promise(function (resolve, reject) { // eslint-disable-line
-    logger.debug('resizing ...');
-    const downloadPath = `${path}/googlelogo.png`;
-    const newDownloadPath = `${path}/googlelogo-new.png`;
+    const downloadPath = path;
+    const newDownloadPath = `new-${stripThumbnailName(path)}`;
     jimp.read(downloadPath).then((thumbnail) => { // eslint-disable-line
-      logger.debug('found thumbnail applying ... ');
+      logger.debug('resizing thumbnail ... ');
       thumbnail
         .resize(50, 50) // 50x50 pixel
         .quality(100)
         .write(newDownloadPath)
-        .getBuffer('application/octet-stream', (buffer) => { // eslint-disable-line
-          resolve(buffer);
+        .getBuffer('application/octet-stream', () => { // eslint-disable-line
+          resolve(newDownloadPath);
         });
     })
       .catch((er) => { reject(new Error(er)); });
@@ -88,25 +61,28 @@ function resizeImg(path) {
  * @param {String} path Public image path
  * @returns {Object} Resized image blob
  */
-function downloadThumbnail(dir) {
-  return new Promise((resolve) => { // eslint-disable-line
-    resolve(dir);
-    // try {
-    //   request(path).pipe(fs.createWriteStream(dir)
-    //     .then((er) => {
-    //       if (er) {
-    //         throw new Error(er);
-    //       }
-    //       resolve(dir);
-    //     }));
-    // } catch (er) {
-    //   reject(er);
-    // }
+function downloadThumbnail(dir, path) {
+  return new Promise((resolve, reject) => { // eslint-disable-line
+    const fileName = stripThumbnailName(path);
+    const downloadPath = `${dir}/${fileName}`;
+    logger.debug(downloadPath);
+    logger.debug(path);
+    try {
+      axios({ url: path, responseType: 'stream' }).then((response) => { // eslint-disable-line
+        logger.debug('image downloaded !');
+        response.data.pipe(fs.createWriteStream(downloadPath)
+          .on('close', () => { // eslint-disable-line
+            resolve(downloadPath);
+          }));
+      }).catch(error => ({ status: false, error: `Error: ${error.message}` }));
+    } catch (er) {
+      reject(er);
+    }
   });
 }
 
 /**
- * Resive an image thumbnail
+ * Resize an image thumbnail
  * @param {Object} req the request
  * @param {Object} res the reponse
  */
@@ -124,10 +100,17 @@ module.exports.resize = (req, res) => {
           logger.debug('thumbnail downloaded, resizeing ... ');
           // resize thumbnail
           resizeImg(downloadPath)
-            .then(() => {
+            .then((newDownloadPath) => {
               logger.debug('sending resized thumbnail');
-              res.sendFile(downloadPath);
-              res.end();
+              logger.debug(newDownloadPath);
+              fs.readFile(newDownloadPath, function (err, data) { // eslint-disable-line
+                if (err) {
+                  throw new Error(err);
+                }
+                res.contentType('image/png');
+                res.send(data);
+                res.end();
+              });
             })
             .catch((er) => {
               logger.debug(er);

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 
 const cors = require('cors');
 const express = require('express');
@@ -8,7 +9,6 @@ const api = require('./api');
 const auth = require('./auth');
 
 const SERVICE_CHECK_HTTP = process.env.SERVICE_CHECK_HTTP || '/healthcheck';
-
 
 module.exports = async function () { // eslint-disable-line
 
@@ -30,9 +30,6 @@ module.exports = async function () { // eslint-disable-line
 
   // Add health check endpoint
   app.get(SERVICE_CHECK_HTTP, (req, res) => res.send({ uptime: process.uptime() }));
-
-  // Add all other service routes
-  app.get('/', (req, res) => res.send('Hello World'));
 
   // Connect the routes
   connect(app);
