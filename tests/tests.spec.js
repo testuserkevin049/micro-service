@@ -11,51 +11,48 @@ const Assert = new should.Assertion(true);
 const baseUrl = `localhost:${process.env.PORT}/api/v1/`;
 
 
-
-
 describe('Micro-service test suite', function () { // eslint-disable-line
-
   const credentials = {
     username: 'user1',
     password: 'pass1',
   };
   const validToken = `Bearer ${jwt.sign(credentials, 'secret')}`;
-  const invalidToken = 'invalid-token';
-  let userDirectory = Path.join(__dirname, '../data/test');
+  // const invalidToken = 'invalid-token'; // TODO:* Make use of me // eslint-disable-line
+  let userDirectory = Path.join(__dirname, '../data/test'); // eslint-disable-line
   let thumbnailPath = '';
   const patchJson = {
-    name: "fullnames",
-    handle: "newHandle",
+    name: 'fullnames',
+    handle: 'newHandle',
   };
-  const stripFilename = function (path) {
+  const stripFilename = function (path) { // eslint-disable-line
     return path.replace(/^(.*)\//, '');
   };
 
 
-  before(function () {
+  before(function () { // eslint-disable-line
     // TODO:* login user
   });
 
-  after(function () {
-    fs.exists(thumbnailPath, function (thumbnailExist) {
+  after(function () { // eslint-disable-line
+    fs.exists(thumbnailPath, function (thumbnailExist) { // eslint-disable-line
       if (thumbnailExist) {
-        fs.unlink(thumbnailPath, function (er) {
+        fs.unlink(thumbnailPath, function (er) { // eslint-disable-line
           if (er) {
             throw new Error(er);
           }
           thumbnailPath = '';
         });
       }
-    })
+    });
   });
 
-  describe('/login User authentication', function () {
+  describe('/login User authentication', function () { // eslint-disable-line
     const invalidBodyParam = {
       invalid: 'invalid body parameter',
     };
-    it('Respond with a 200 user login request', function () { // eslint-disable-line
+    it('Respond with a 200 user login request', function () { // eslint-disable-line 
       axios.post(`${baseUrl}login`, credentials)
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should.exist(res.body.token);
           should(res.body.token).be.a.String();
@@ -63,179 +60,174 @@ describe('Micro-service test suite', function () { // eslint-disable-line
           should(res.body).be.eql(validToken);
           should(res.status).be.eql(200);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with a 500 login with invalid body parameter', function () {
+    it('Respond with a 500 login with invalid body parameter', function () { // eslint-disable-line
       axios.post(`${baseUrl}login`, invalidBodyParam, {
         'Content-Type': 'application/json',
       })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(500);
-        })
+        });
     });
 
-    it('Respond with 500 user login request without credentails', function () {
+    it('Respond with 500 user login request without credentails', function () { // eslint-disable-line
       axios.post(`${baseUrl}login`, {},
         {
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           res.status.should.eql(500);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
-
   });
 
 
-  describe('/json/patch  Json Patching', function () {
+  describe('/json/patch  Json Patching', function () { // eslint-disable-line
     const json = {
-      name: "fullnames",
-      handle: "handle",
+      name: 'fullnames',
+      handle: 'handle',
     };
-
     const patch = {
-      op: "replace",
-      path: "/handle",
-      value: "newHandle",
+      op: 'replace',
+      path: '/handle',
+      value: 'newHandle',
     };
-
     const invalidBodyParam = {
       json,
       obj: {
-        value: 'unexpected obejct'
+        value: 'unexpected obejct',
       },
     };
-
-    it('Respont with 200  authenticated request', function () {
-
-      axios.patch(`${baseUrl}json/patch`, {
-        json,
-        patch,
-      }, {
+    it('Respont with 200  authenticated request', function () { // eslint-disable-line
+      axios.patch(`${baseUrl}json/patch`,
+        {
+          json,
+          patch,
+        },
+        {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': validToken,
+            Authorization: validToken,
           },
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(200);
           should(res.body).be.eql(patchJson);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 401 unauthenticated patch request', function () {
-      axios.patch(`${baseUrl}json/patch`, {
-        json,
-        patch,
-      }, {
+    it('Respond with 401 unauthenticated patch request', function () { // eslint-disable-line
+      axios.patch(`${baseUrl}json/patch`,
+        {
+          json,
+          patch,
+        },
+        {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': validToken,
+            Authorization: validToken,
           },
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(401);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 401 unauthenticated with valid body', function () {
-
-      axios.patch(`${baseUrl}json/patch`, {
-        json,
-        patch,
-      }, {
+    it('Respond with 401 unauthenticated with valid body', function () { // eslint-disable-line
+      axios.patch(`${baseUrl}json/patch`,
+        {
+          json,
+          patch,
+        },
+        {
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(401);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 500 authenticated with invalid body parameters', function () {
-
-      axios.patch(`${baseUrl}json/patch`, {
-        invalidBodyParam
-      }, {
+    it('Respond with 500 authenticated with invalid body parameters', function () { // eslint-disable-line
+      axios.patch(`${baseUrl}json/patch`,
+        {
+          invalidBodyParam,
+        },
+        {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': validToken,
+            Authorization: validToken,
           },
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(500);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 500 unauthenticated without empty body parameters', function () {
-      axios.patch(`${baseUrl}json/patch`, {}, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(function (res) {
+    it('Respond with 500 unauthenticated without empty body parameters', function () { // eslint-disable-line
+      axios.patch(`${baseUrl}json/patch`, {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(401);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
-
   });
 
 
-  describe('/thumbnail thumbnail resizing', function () {
-
+  describe('/thumbnail thumbnail resizing', function () { // eslint-disable-line
     const bodyParam = {
-      path: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+      path: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
       size: {
-        unit: "pixel",
+        unit: 'pixel',
         dimentions: {
-          width: "50",
-          height: "50",
+          width: '50',
+          height: '50',
         },
       },
     };
-
-    const invalidBodyParam = {
-      invalid: 'invalid body parameter object',
-    };
-
-    it('Respond with 200 authenticated with valid body parameters', function () {
+    it('Respond with 200 authenticated with valid body parameters', function () { // eslint-disable-line
       axios.post(`${baseUrl}thumbnail`, bodyParam,
         {
           'Content-Type': 'application/json',
-          'Authorization': validToken,
+          Authorization: validToken,
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           const filename = stripFilename(bodyParam.path);
           // read thumbnail
@@ -250,72 +242,91 @@ describe('Micro-service test suite', function () { // eslint-disable-line
               Assert.fail(er);
             });
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 401 unauthenticated with invalid body', function () {
+    it('Respond with 401 unauthenticated with invalid body', function () { // eslint-disable-line
+      const invalidBodyParam = {
+        invalid: 'invalid body parameter object',
+      };
       axios.post(`${baseUrl}thumbnail`, invalidBodyParam,
         {
           'Content-Type': 'application/json',
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(401);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 401 unauthenticated with valid body parameters', function () {
+    it('Respond with 401 unauthenticated with valid body parameters', function () { // eslint-disable-line
       axios.post(`${baseUrl}thumbnail`, bodyParam,
         {
           'Content-Type': 'application/json',
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(401);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
 
-    it('Respond with 500 authenticated with invalid body parameters', function () {
+    it('Respond with 500 authenticated with invalid body parameters', function () { // eslint-disable-line
+      const invalidBodyParam = {
+        invalid: 'invalid body parameter object',
+      };
       axios.post(`${baseUrl}thumbnail`, invalidBodyParam,
         {
           'Content-Type': 'application/json',
-          'Authorization': validToken,
+          Authorization: validToken,
         })
-        .then(function (res) {
+        .then(function (res) { // eslint-disable-line
           should.exist(res);
           should(res.status).be.eql(500);
         })
-        .catch(function (er) {
+        .catch(function (er) { // eslint-disable-line
           Assert.fail(er);
         });
     });
-
   });
 
-  it('Respond with 500 authenticated with empty body parameters', function () {
-    it('Respond with 401 unauthenticated with invalid body', function () {
-      axios.post(`${baseUrl}thumbnail`, invalidBodyParam,
-        {
-          'Content-Type': 'application/json',
-          'Authorization': validToken,
-        })
-        .then(function (res) {
-          should.exist(res);
-          should(res.status).be.eql(500);
-        })
-        .catch(function (er) {
-          Assert.fail(er);
-        });
-    });
-
+  it('Respond with 401 unauthenticated with invalid body', function () { // eslint-disable-line
+    const invalidBodyParam = {
+      invalid: 'invalid body parameter object',
+    };
+    axios.post(`${baseUrl}thumbnail`, invalidBodyParam,
+      {
+        'Content-Type': 'application/json',
+        Authorization: validToken,
+      })
+      .then(function (res) { // eslint-disable-line
+        should.exist(res);
+        should(res.status).be.eql(500);
+      })
+      .catch(function (er) { // eslint-disable-line
+        Assert.fail(er);
+      });
   });
 
+  it('Respond with 500 authenticated with empty body parameters', function () { // eslint-disable-line
+    axios.post(`${baseUrl}thumbnail`, {},
+      {
+        'Content-Type': 'application/json',
+        Authorization: validToken,
+      })
+      .then(function (res) { // eslint-disable-line
+        should.exist(res);
+        should(res.status).be.eql(500);
+      })
+      .catch(function (er) { // eslint-disable-line
+        Assert.fail(er);
+      });
+  });
 });

@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 
 const cors = require('cors');
 const express = require('express');
