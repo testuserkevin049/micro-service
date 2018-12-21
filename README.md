@@ -4,10 +4,8 @@
 
 ## Prerequisites
 
-  1. Nodejs - version - ~ v8.9.4 [""]("")
-  2. Visual Studio Code (IDE) 
-  3. 
-  4. 
+  1. Nodejs - version - ~ v8.9.4 [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+  2. Visual Studio Code (IDE) [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
 
 
 ### setup
