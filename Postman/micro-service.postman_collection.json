@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "f1943623-d0c0-44e4-a4cc-a98925ae2a89",
+		"name": "micro-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/api/v1/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8f03050-0449-4ae6-aa97-67b4c797e288",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"user1\",\n\t\"password\": \"pass1\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/v1/json/patch",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"json\": {\n\t\t\"name\": \"fullnames\",\n\t\t\"handle\": \"handle\"\n\t},\n\t\"patch\": {\n\t\t\"op\": \"replace\",\n\t\t\"path\": \"/handle\",\n\t\t\"value\": \"newHandle\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/json/patch",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"json",
+						"patch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/api/v1/thumbnail",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png\",\n    \"size\": {\n        \"unit\": \"pixel\",\n        \"dimentions\": {\n            \"width\": \"50\",\n            \"height\": \"50\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/thumbnail",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"thumbnail"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
