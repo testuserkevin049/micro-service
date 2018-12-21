@@ -7,12 +7,10 @@ const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const jimp = require('jimp');
 const Server = require('../app');
-const authHelper = require('../authHelper');
 
 const PORT = process.env.PORT || 3000;
-const baseUrl = `/api/v1/`;
+const baseUrl = '/api/v1/';
 let app;
-let server;
 
 describe('Micro-service test cases\n ', function () { // eslint-disable-line
   before(function (done) { // eslint-disable-line
@@ -47,14 +45,13 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
     };
 
     after(function () { // eslint-disable-line
-      fs.readdir(userDirectory, (err, files) => { // eslint-disable-line
+      fs.readdir(userDirectory, (err, files) => {
         if (err) throw err;
-
-        for (const file of files) {
-          fs.unlink(Path.join(userDirectory, file), err => { // eslint-disable-line
-            if (err) throw err;
+        files.forEach((file) => {
+          fs.unlink(Path.join(userDirectory, file), (error) => {
+            if (error) throw error;
           });
-        }
+        });
       });
     });
 
@@ -109,7 +106,7 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
             'Content-Type': 'application/json',
             Authorization: validToken,
           })
-          .send({ json, patch, })
+          .send({ json, patch })
           .end((er, res) => {
             if (er) {
               done(er);
@@ -128,7 +125,7 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
           .set({
             'Content-Type': 'application/json',
           })
-          .send({ json, patch, })
+          .send({ json, patch })
           .end((er, res) => {
             if (er) {
               done(er);
@@ -146,7 +143,7 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
           .set({
             'Content-Type': 'application/json',
           })
-          .send({ json, patch, })
+          .send({ json, patch })
           .end((er, res) => {
             if (er) {
               done(er);
@@ -222,10 +219,8 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
             } else {
               should.exist(res);
               const filename = stripFilename(bodyParam.path);
-              const path = `${userDirectory}/new-${filename}`;
-              console.log(path);
               // read thumbnail
-              jimp.read(path)
+              jimp.read(`${userDirectory}/new-${filename}`)
                 .then((thumbnail) => {
                   const width = thumbnail.getWidth();
                   const height = thumbnail.getHeight();
@@ -238,8 +233,8 @@ describe('Micro-service test cases\n ', function () { // eslint-disable-line
                   should(res.status).be.eql(200);
                   done();
                 })
-                .catch((er) => {
-                  done(er);
+                .catch((err) => {
+                  done(err);
                 });
             }
           });

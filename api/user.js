@@ -41,12 +41,8 @@ module.exports = {
    */
   loginUser: (req, res) => {
     const logger = req.logger; // eslint-disable-line
-    if (req.body.username != undefined && req.body.password != undefined) {
-    //   res.sendStatus(200).end();
-    // } else {
-    //   res.sendStatus(500).end();
-    // }
-
+    if (req.body.username !== undefined
+      && req.body.password !== undefined) {
       const username = req.body.username; // eslint-disable-line
       const password = req.body.password; // eslint-disable-line
       const token = jwt.sign({

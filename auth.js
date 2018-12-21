@@ -16,11 +16,11 @@ const logger = winston.createLogger({
 // Authentication middleware
 module.exports = (req, res, next) => {
   req.logger = logger;
-  // TODO:* Replace this with a better implamentation. Use swagger authentication to specify routes that require authentication.
+  // TODO:* Replace this with a better implamentation. Use swagger authentication to specify routes
+  //      * that require authentication.
   try {
     const authUrl = req.url.replace('/api/v1/', '').match(/delete|json|patch|thumbnail/).length > 0;
     let token = req.get('authorization');
-    
     if (token === undefined) {
       res.sendStatus(401).end();
     }
