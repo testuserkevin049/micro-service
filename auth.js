@@ -16,10 +16,14 @@ const logger = winston.createLogger({
 // Authentication middleware
 module.exports = (req, res, next) => {
   req.logger = logger;
-
+  // TODO:* Replace this with a better implamentation. Use swagger authentication to specify routes that require authentication.
   try {
     const authUrl = req.url.replace('/api/v1/', '').match(/delete|json|patch|thumbnail/).length > 0;
     let token = req.get('authorization');
+    
+    if (token === undefined) {
+      res.sendStatus(401).end();
+    }
     token = token.replace('Bearer ', '');
     if (authUrl) {
       authHelper.validToken(token, (error, decoded) => { // eslint-disable-line
@@ -34,6 +38,8 @@ module.exports = (req, res, next) => {
       });
     }
   } catch (er) {
+    logger.debug('auth error');
+    logger.debug(er);
     try {
       const noAuthUrl = req.url.replace('/api/v1/', '').match(/login|user/).length > 0;
       if (noAuthUrl) {
@@ -41,7 +47,7 @@ module.exports = (req, res, next) => {
       }
     } catch (err) {
       logger.debug(err);
-      res.send(500).end();
+      res.sendStatus(500).end();
     }
   }
 };

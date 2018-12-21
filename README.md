@@ -1,14 +1,40 @@
 # micro-service
 
+  Simple node swagger service with basic ( username & password ) authentication.
 
+## Prerequisites
+
+  1. Nodejs - version - ~ v8.9.4 [""]("")
+  2. Visual Studio Code (IDE) 
+  3. 
+  4. 
+
+
+### setup
+
+  - Please create a new directory at root of the project called data. This is a temporary folder where
+    downloaded thumbnails before they are deleted during tests.
+
+
+```bash
+
+# Test directory 
+$ mkdir data/tests
+
+# User directory
+# replace the username with the username of the user
+# Please run this everytime you are about to login a user
+$ mkdir data/{USERNAME}
+
+```
 
 ## How to use
 
 The following npm scripts are available:
 
 ~~~ sh
-npm (run) start    // starts the application
-npm (run) test     // runs all tests
+npm start          // starts the application
+npm test           // runs all tests
 npm run build      // creates a docker container
 npm run watch      // runs a file watcher to restart and test on each file change
 ~~~

@@ -11,12 +11,17 @@ let logger;
  * @param {string} token authentication token
  */
 function findUserDirectory(token) {
-  return new Promise((resolve) => { // eslint-disable-line
+  return new Promise((resolve, reject) => { // eslint-disable-line
     authHelper.validToken(token, (er, decoded) => { // eslint-disable-line
       if (er) {
-        throw new Error(er);
+        reject(er);
       }
       const { username } = decoded;
+      if (username === 'testuser') {
+        resolve({
+          dir: Path.join(__dirname, '../data/test'),
+        });
+      }
       resolve({
         dir: Path.join(__dirname, `../data/${username}`),
       });
@@ -40,9 +45,11 @@ function stripThumbnailName(path) { // eslint-disable-line
 function resizeImg(path) {
   return new Promise(function (resolve, reject) { // eslint-disable-line
     const downloadPath = path;
-    const newDownloadPath = `new-${stripThumbnailName(path)}`;
+    const base = downloadPath.replace(stripThumbnailName(path), '');
+    const newDownloadPath = `${base}new-${stripThumbnailName(path)}`;
     jimp.read(downloadPath).then((thumbnail) => { // eslint-disable-line
       logger.debug('resizing thumbnail ... ');
+      logger.debug(`new location ==> ${newDownloadPath}`);
       thumbnail
         .resize(50, 50) // 50x50 pixel
         .quality(100)
@@ -70,6 +77,7 @@ function downloadThumbnail(dir, path) {
     try {
       axios({ url: path, responseType: 'stream' }).then((response) => { // eslint-disable-line
         logger.debug('image downloaded !');
+        logger.debug(downloadPath);
         response.data.pipe(fs.createWriteStream(downloadPath)
           .on('close', () => { // eslint-disable-line
             resolve(downloadPath);
@@ -88,7 +96,8 @@ function downloadThumbnail(dir, path) {
  */
 module.exports.resize = (req, res) => {
   logger = req.logger; // eslint-disable-line
-  const token = req.get('authorization'); // eslint-disable-line
+  let token = req.get('authorization'); // eslint-disable-line
+  token = token.replace('Bearer ', '');
   const { path } = req.body;
   // Find user directory
   findUserDirectory(token)

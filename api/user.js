@@ -41,15 +41,23 @@ module.exports = {
    */
   loginUser: (req, res) => {
     const logger = req.logger; // eslint-disable-line
-    const username = req.body.username; // eslint-disable-line
-    const password = req.body.password; // eslint-disable-line
-    const token = jwt.sign({
-      username,
-      password,
-    }, 'secret');
+    if (req.body.username != undefined && req.body.password != undefined) {
+    //   res.sendStatus(200).end();
+    // } else {
+    //   res.sendStatus(500).end();
+    // }
 
-    res.send({ token }).end();
+      const username = req.body.username; // eslint-disable-line
+      const password = req.body.password; // eslint-disable-line
+      const token = jwt.sign({
+        username,
+        password,
+      }, 'secret');
 
+      res.send({ token }).end();
+    } else {
+      res.sendStatus(400).end();
+    }
     // this.createUserDirectory(username)
     //   .then(() => res.send({ token }).end())
     //   .catch((er) => {
